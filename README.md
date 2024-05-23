@@ -8,6 +8,8 @@ This is a Streamlit application that generates random passwords based on user pr
 - **Password History**: View previously generated passwords and add a purpose to each.
 - **Manage Passwords**: Delete any password from the history.
 
+<img width="960" alt="image" src="https://github.com/manyahegde/CodeClauseInternship_PasswordGenerator/assets/107339033/617cc943-16a7-46a4-a59d-373dcf530456">
+
 ## Installation
 
 To run this application, you need to have Python and Streamlit installed. Follow the steps below to set up the application.
