@@ -9,7 +9,7 @@ def generate_password(length, use_numbers, use_symbols):
     if use_symbols:
         characters += string.punctuation
 
-    password = ''.join(random.choice(characters) for i in range(length))
+    password = ''.join(random.choice(characters) for _ in range(length))
     return password
 
 def main():
@@ -31,25 +31,31 @@ def main():
 
         # Update history
         st.session_state.passwords.append(password)
-        st.session_state.purposes.append(None)  # Initialize purpose as None
-        
-        # Add Purpose
-        idx = len(st.session_state.passwords) - 1
-        new_purpose = st.text_input("Add Purpose for this password:", key=f"purpose_{idx}")
-        if new_purpose:
-            st.session_state.purposes[idx] = new_purpose
+        st.session_state.purposes.append("")  # Initialize purpose as an empty string
 
     # Display password history
     st.sidebar.title("Password History")
     for idx, (password, purpose) in enumerate(zip(st.session_state.passwords, st.session_state.purposes)):
         displayed_text = f"{password}"
         if purpose:
-            displayed_text = f"{purpose}: {password}"
+            displayed_text = f"{password} ({purpose})"
         st.sidebar.write(displayed_text)
-        
-        if st.sidebar.button("Delete", key=f"delete_{idx}"):
-            st.session_state.passwords.pop(idx)
-            st.session_state.purposes.pop(idx)
+
+        # Add Purpose forms and Delete button
+        if not purpose:  # Only show the input box if purpose is not set
+            with st.sidebar:
+                with st.form(key=f"purpose_form_{idx}"):
+                    new_purpose = st.text_input(f"Add Purpose for password {idx + 1}:", value=st.session_state.purposes[idx])
+                    submit_purpose = st.form_submit_button("Submit")
+                    if submit_purpose:
+                        st.session_state.purposes[idx] = new_purpose
+                        st.experimental_rerun()  # Rerun to update the sidebar
+
+        with st.sidebar:
+            if st.button(f"Delete {idx}", key=f"delete_{idx}"):
+                st.session_state.passwords.pop(idx)
+                st.session_state.purposes.pop(idx)
+                st.experimental_rerun()  # Rerun the app to refresh the sidebar
 
 if __name__ == "__main__":
     main()
